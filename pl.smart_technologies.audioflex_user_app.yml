@@ -1,0 +1,34 @@
+id: pl.smart_technologies.audioflex_user_app
+runtime: org.gnome.Platform
+runtime-version: '51'
+sdk: org.gnome.Sdk
+command: audioflex_user_app
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --device=dri
+  - --talk-name=org.freedesktop.secrets
+modules:
+  - name: audioflex-user-app
+    buildsystem: simple
+    sources:
+      - type: archive
+        url: https://download.audioflex.online/flatpak/0.8.46/AudioFlex-0.8.46-linux-x86_64-6973862e9.tar.gz
+        sha256: bb080f4743725d52eeda4911736d56534864da67741256db1c58f823522e4eb5
+        strip-components: 0
+      - type: archive
+        url: https://download.audioflex.online/flatpak/0.8.46/AudioFlex-0.8.46-flathub-metadata.tar.gz
+        sha256: 42ca15f7c94167e1c1444687058f7897eec8125328ad7b18a5206bf6dddc45a0
+        strip-components: 0
+        dest: flathub-metadata
+    build-commands:
+      - install -d /app/audioflex /app/bin
+      - cp -a audioflex_user_app lib data /app/audioflex/
+      - chmod 755 /app/audioflex/audioflex_user_app
+      - printf '%s\n' '#!/bin/sh' 'exec /app/audioflex/audioflex_user_app "$@"' > audioflex-user-app-launcher
+      - install -m 755 audioflex-user-app-launcher /app/bin/audioflex_user_app
+      - install -Dm 644 flathub-metadata/pl.smart_technologies.audioflex_user_app.desktop /app/share/applications/pl.smart_technologies.audioflex_user_app.desktop
+      - install -Dm 644 flathub-metadata/pl.smart_technologies.audioflex_user_app.metainfo.xml /app/share/metainfo/pl.smart_technologies.audioflex_user_app.metainfo.xml
+      - install -Dm 644 flathub-metadata/pl.smart_technologies.audioflex_user_app.png /app/share/icons/hicolor/256x256/apps/pl.smart_technologies.audioflex_user_app.png
